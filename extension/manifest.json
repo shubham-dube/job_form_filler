@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "FormFiller AI - Google Form Auto-Filler",
+  "version": "1.0.0",
+  "description": "Automated AI job application filler powered by Gemini. 1-click auto-fill for Google Forms behind login.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "FormFiller AI",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_page": "options.html",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://docs.google.com/forms/*",
+    "*://forms.gle/*",
+    "http://localhost:8000/*",
+    "http://127.0.0.1:8000/*",
+    "https://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://docs.google.com/forms/*",
+        "https://forms.gle/*"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}

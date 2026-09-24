@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormFiller AI - Cloud Job Application Auto-Filler</title>
+  <meta name="description" content="Intelligent AI Google Form Auto-Filler powered by Gemini. Zero manual effort, instant pre-filled review URLs, and seamless Chrome extension.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">FormFiller <span class="badge-ai">AI</span></span>
+          <span class="brand-subtitle">Gemini Auto-Filler</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="filler-tab" id="nav-filler">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <span>Fill Form</span>
+        </button>
+
+        <button class="nav-item" data-tab="profile-tab" id="nav-profile">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Master Profile</span>
+        </button>
+
+        <button class="nav-item" data-tab="extension-tab" id="nav-extension">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          <span>Chrome Extension</span>
+        </button>
+
+        <button class="nav-item" data-tab="bookmarklet-tab" id="nav-bookmarklet">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span>Mobile Bookmarklet</span>
+        </button>
+
+        <button class="nav-item" data-tab="history-tab" id="nav-history">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span>Application History</span>
+        </button>
+      </nav>
+
+      <div class="system-status-card" id="system-status">
+        <div class="status-indicator">
+          <span class="status-dot online"></span>
+          <span class="status-label" id="status-label">API Connected</span>
+        </div>
+        <div class="status-meta">
+          <span id="model-name">Gemini Flash</span>
+          <span id="profile-status">Profile Ready</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <h1 id="page-title">Auto-Fill Google Form</h1>
+          <p id="page-subtitle">Map your master profile & targeted job description directly into Google Form fields.</p>
+        </div>
+        <div class="header-actions">
+          <a href="/docs" target="_blank" class="btn btn-secondary btn-sm" id="btn-api-docs">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            API Docs
+          </a>
+          <button class="btn btn-primary btn-sm" id="btn-quick-new">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            New Application
+          </button>
+        </div>
+      </header>
+
+      <!-- TAB 1: FORM FILLER -->
+      <section class="tab-pane active" id="filler-tab">
+        <div class="form-container">
+          <!-- Input Card -->
+          <div class="card glass-card">
+            <div class="card-header">
+              <h2>Form Source & Requirements</h2>
+              <div class="source-toggle">
+                <button class="toggle-btn active" id="toggle-url" onclick="switchSourceMode('url')">URL Link</button>
+                <button class="toggle-btn" id="toggle-html" onclick="switchSourceMode('html')">Paste HTML / Data</button>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <!-- URL Input Mode -->
+              <div class="input-group" id="url-group">
+                <label for="form-url">Google Form URL</label>
+                <div class="input-with-button">
+                  <input type="text" id="form-url" placeholder="https://docs.google.com/forms/d/e/.../viewform or forms.gle/..." />
+                  <button type="button" class="btn btn-secondary" id="btn-paste-url" onclick="pasteFromClipboard('form-url')">Paste</button>
+                </div>
+                <span class="helper-text">Works with short links (forms.gle) or full viewform URLs. If the form requires login, use the Chrome Extension or Bookmarklet.</span>
+              </div>
+
+              <!-- HTML / Data Input Mode (Hidden by default) -->
+              <div class="input-group hidden" id="html-group">
+                <label for="form-html">Form HTML Source or FB_PUBLIC_LOAD_DATA_</label>
+                <textarea id="form-html" rows="4" placeholder="Paste full page source (Ctrl+U) or FB_PUBLIC_LOAD_DATA_ array here..."></textarea>
+                <span class="helper-text">For forms behind Google Login without extension: press Ctrl+U in your logged-in browser, copy all, and paste here.</span>
+              </div>
+
+              <div class="grid-2-cols">
+                <!-- Job Description Input -->
+                <div class="input-group">
+                  <div class="label-row">
+                    <label for="job-description">Job Description (JD)</label>
+                    <button type="button" class="btn-link" onclick="pasteFromClipboard('job-description')">Paste Clipboard</button>
+                  </div>
+                  <textarea id="job-description" rows="5" placeholder="Paste the job requirements, responsibilities, or role description here. Gemini will synthesize your answers to match..."></textarea>
+                  <span class="helper-text">Recommended: Tailors free-text narrative answers specifically to the job role.</span>
+                </div>
+
+                <!-- Custom Notes Input -->
+                <div class="input-group">
+                  <div class="label-row">
+                    <label for="custom-notes">Custom Notes / Application Hints</label>
+                    <span class="optional-badge">Optional</span>
+                  </div>
+                  <textarea id="custom-notes" rows="5" placeholder="E.g., 'Emphasize Python and AWS expertise', 'Notice period is negotiable to 15 days', 'Available immediately'..."></textarea>
+                  <span class="helper-text">Add any application-specific nuances or override details for Gemini.</span>
+                </div>
+              </div>
+
+              <!-- Action Bar -->
+              <div class="action-bar">
+                <button class="btn btn-outline" id="btn-dry-run" onclick="executeDryRun()">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  Inspect Questions Only
+                </button>
+                <button class="btn btn-primary btn-glow" id="btn-generate-prefill" onclick="executeFormFill()">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+                  Generate Pre-Filled Form with AI
+                </button>
+              </div>
+
+              <!-- Loading Indicator -->
+              <div class="loading-state hidden" id="loading-state">
+                <div class="spinner"></div>
+                <div class="loading-content">
+                  <h3 id="loading-title">Analyzing Form & Synthesizing Answers...</h3>
+                  <p id="loading-subtitle">Gemini is mapping your master profile to form questions with structured reasoning.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Results Section (Hidden until generated) -->
+          <div class="card glass-card hidden" id="results-card">
+            <div class="card-header results-header">
+              <div>
+                <span class="badge-success">Ready for Review</span>
+                <h2 id="result-form-title">Job Application Form</h2>
+                <p id="result-form-desc" class="form-desc"></p>
+              </div>
+              <div class="header-badges" id="stats-badges"></div>
+            </div>
+
+            <div class="card-body">
+              <!-- Pre-filled Link Hero Banner -->
+              <div class="prefill-banner">
+                <div class="banner-icon">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                  </svg>
+                </div>
+                <div class="banner-content">
+                  <h3>Official Pre-Filled Google Form URL</h3>
+                  <p class="url-text" id="result-url-text"></p>
+                </div>
+                <div class="banner-buttons">
+                  <button class="btn btn-secondary" id="btn-copy-url" onclick="copyPrefillUrl()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy Link
+                  </button>
+                  <a href="#" target="_blank" class="btn btn-primary" id="btn-open-form">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                    Open Pre-filled Form
+                  </a>
+                </div>
+              </div>
+
+              <!-- Notice for Resume Attachment -->
+              <div class="alert alert-warning hidden" id="file-upload-alert">
+                <div class="alert-icon">⚠️</div>
+                <div class="alert-text">
+                  <strong>Resume / File Upload Required:</strong>
+                  <span id="file-upload-text">Google deliberately blocks pre-filling file upload fields via URL. All your answers are populated; simply attach your resume PDF when the form opens before submitting!</span>
+                </div>
+              </div>
+
+              <!-- Answers Review Table -->
+              <div class="table-container">
+                <div class="table-header-row">
+                  <h3>AI Mapped Questions & Confidence Review</h3>
+                  <div class="legend">
+                    <span class="legend-badge conf-high">HIGH Confidence</span>
+                    <span class="legend-badge conf-medium">MEDIUM Confidence</span>
+                    <span class="legend-badge conf-low">LOW (Inspect)</span>
+                  </div>
+                </div>
+                <table class="review-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px;">#</th>
+                      <th style="width: 30%;">Question</th>
+                      <th style="width: 35%;">AI Tailored Answer</th>
+                      <th style="width: 15%; text-align: center;">Confidence</th>
+                      <th style="width: 20%;">Reasoning</th>
+                    </tr>
+                  </thead>
+                  <tbody id="answers-table-body">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: MASTER PROFILE -->
+      <section class="tab-pane" id="profile-tab">
+        <div class="card glass-card">
+          <div class="card-header">
+            <div>
+              <h2>Master Profile & Answer Bank</h2>
+              <p>Your single source of truth for resume details, contact info, CTC, notice period, and behavioral answers.</p>
+            </div>
+            <div class="profile-actions">
+              <span class="save-status" id="profile-save-status">All changes saved</span>
+              <button class="btn btn-primary" id="btn-save-profile" onclick="saveProfile()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                Save Profile
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="profile-editor-layout">
+              <div class="editor-pane">
+                <textarea id="profile-textarea" class="code-editor" placeholder="Loading master profile..."></textarea>
+              </div>
+              <div class="shortcuts-pane">
+                <h3>Quick Profile Tips</h3>
+                <div class="tip-card">
+                  <h4>💼 Logistics Accuracy</h4>
+                  <p>Keep your <strong>Notice Period</strong>, <strong>Current CTC</strong>, and <strong>Expected CTC</strong> up to date. Gemini will pick these exact figures without hallucination.</p>
+                </div>
+                <div class="tip-card">
+                  <h4>🎯 Project Achievements</h4>
+                  <p>Include 2-3 detailed project summaries with STAR format (Situation, Task, Action, Result). Gemini synthesizes these into behavioral form questions.</p>
+                </div>
+                <div class="tip-card">
+                  <h4>🔗 Essential Links</h4>
+                  <p>List your LinkedIn, GitHub, and Portfolio URLs cleanly under contact information.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: CHROME EXTENSION -->
+      <section class="tab-pane" id="extension-tab">
+        <div class="card glass-card">
+          <div class="card-header">
+            <div>
+              <h2>Chrome Extension (Manifest V3)</h2>
+              <p>The ultimate 1-click zero-friction experience. Fills Google Forms directly in your active browser without saving HTML or copying links.</p>
+            </div>
+            <span class="badge-tag">Zero File Saving</span>
+          </div>
+          <div class="card-body">
+            <div class="grid-2-cols">
+              <div class="ext-instruction-card">
+                <h3>🚀 How to Install in 30 Seconds</h3>
+                <ol class="step-list">
+                  <li>Open Google Chrome or any Chromium browser (Edge, Brave, Kiwi).</li>
+                  <li>Navigate to <code>chrome://extensions</code> in your address bar.</li>
+                  <li>Enable <strong>"Developer mode"</strong> using the toggle in the top-right corner.</li>
+                  <li>Click <strong>"Load unpacked"</strong>.</li>
+                  <li>Select the <code>extension</code> folder inside this project directory:
+                    <div class="code-snippet"><code>d:\Projects\Job_Form_Filler\extension</code></div>
+                  </li>
+                  <li>Pin the <strong>FormFiller AI</strong> icon to your browser bar!</li>
+                </ol>
+              </div>
+
+              <div class="ext-feature-card">
+                <h3>✨ Why the Extension Solves Login Hurdles</h3>
+                <div class="feature-item">
+                  <div class="feature-icon">🛡️</div>
+                  <div>
+                    <strong>Already Signed-in Context</strong>
+                    <p>Because you are already logged in to Google in your browser, the extension reads the internal form data instantly from the active tab. No redirect errors!</p>
+                  </div>
+                </div>
+                <div class="feature-item">
+                  <div class="feature-icon">⚡</div>
+                  <div>
+                    <strong>1-Click Auto-Fill</strong>
+                    <p>Click "Auto-Fill" and your form fields populate or auto-redirect to the pre-filled URL immediately.</p>
+                  </div>
+                </div>
+                <div class="feature-item">
+                  <div class="feature-icon">📋</div>
+                  <div>
+                    <strong>Clipboard Auto-Detection</strong>
+                    <p>Quickly pastes your Job Description from your clipboard with a single tap.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: MOBILE BOOKMARKLET -->
+      <section class="tab-pane" id="bookmarklet-tab">
+        <div class="card glass-card">
+          <div class="card-header">
+            <div>
+              <h2>Universal Mobile Bookmarklet</h2>
+              <p>Use FormFiller AI on any mobile device (iPhone Safari, Android Chrome) or desktop browser without installing an extension.</p>
+            </div>
+            <span class="badge-tag">Works Anywhere</span>
+          </div>
+          <div class="card-body">
+            <div class="bookmarklet-hero">
+              <div class="drag-box">
+                <p>Drag this button to your Bookmarks Bar (or tap Copy Code on mobile):</p>
+                <a href="#" id="bookmarklet-link" class="btn btn-primary btn-lg bookmarklet-button">
+                  ✨ Fill with FormFiller AI
+                </a>
+                <button class="btn btn-secondary btn-sm" onclick="copyBookmarkletCode()">Copy Bookmarklet Code</button>
+              </div>
+
+              <div class="bookmarklet-steps">
+                <h3>📱 Mobile Instructions (iOS & Android)</h3>
+                <ol class="step-list">
+                  <li>Bookmark any random page in your mobile browser and name it <strong>"✨ Fill Form"</strong>.</li>
+                  <li>Click <strong>"Copy Bookmarklet Code"</strong> above.</li>
+                  <li>Edit the bookmark you just created, delete the URL, and paste the copied code into the URL field.</li>
+                  <li>Whenever you open a Google Form on your phone, open your bookmarks and tap <strong>"✨ Fill Form"</strong>!</li>
+                  <li>It will extract the form data and open this dashboard with everything pre-loaded for 1-tap pre-filling!</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: APPLICATION HISTORY -->
+      <section class="tab-pane" id="history-tab">
+        <div class="card glass-card">
+          <div class="card-header">
+            <div>
+              <h2>Application History & Audit Log</h2>
+              <p>Review previously generated pre-filled application forms.</p>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="clearHistory()">Clear History</button>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table class="review-table">
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>Form Title</th>
+                    <th>Questions</th>
+                    <th>Job Description</th>
+                    <th>Resume File</th>
+                    <th style="text-align: right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="history-table-body">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormFiller AI</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="popup-header">
+      <div class="header-brand">
+        <span class="logo-sparkle">✨</span>
+        <span class="logo-title">FormFiller <span class="badge-tag">AI</span></span>
+      </div>
+      <div class="header-actions">
+        <a href="options.html" target="_blank" class="icon-btn" title="Settings">⚙️</a>
+      </div>
+    </header>
+
+    <!-- State 1: Active Google Form Detected -->
+    <div id="form-detected-view" class="view-section">
+      <div class="form-meta-box">
+        <div class="meta-label">Detected Google Form:</div>
+        <div class="meta-title" id="ext-form-title">Loading form details...</div>
+      </div>
+
+      <div class="input-field">
+        <div class="label-bar">
+          <label for="ext-jd">Job Description (JD)</label>
+          <button type="button" class="btn-text" id="btn-paste-jd">📋 Paste</button>
+        </div>
+        <textarea id="ext-jd" rows="3" placeholder="Paste job requirements here to tailor narrative answers..."></textarea>
+      </div>
+
+      <div class="input-field">
+        <div class="label-bar">
+          <label for="ext-notes">Custom Instructions</label>
+          <span class="opt-label">Optional</span>
+        </div>
+        <input type="text" id="ext-notes" placeholder="E.g., Notice period negotiable to 15 days" />
+      </div>
+
+      <button class="btn btn-primary btn-full" id="btn-run-fill">
+        <span>🚀</span> Auto-Fill Form with AI
+      </button>
+
+      <!-- Loading State -->
+      <div id="ext-loading" class="ext-loading hidden">
+        <div class="mini-spinner"></div>
+        <span id="loading-msg">Synthesizing answers with Gemini...</span>
+      </div>
+
+      <!-- Results View -->
+      <div id="ext-results" class="ext-results hidden">
+        <div class="success-banner">
+          <div class="banner-title">✓ Ready for 1-Click Review!</div>
+          <div class="stats-line" id="ext-stats">Mapped with Gemini</div>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn btn-secondary btn-sm" id="btn-ext-copy">📋 Copy Link</button>
+          <button class="btn btn-primary btn-sm" id="btn-ext-open">🔗 Open Pre-filled Form</button>
+        </div>
+
+        <div class="answers-preview">
+          <div class="preview-title">Answers Preview:</div>
+          <div class="preview-list" id="ext-preview-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- State 2: No Form Detected -->
+    <div id="no-form-view" class="view-section hidden">
+      <div class="empty-state">
+        <div class="empty-icon">📋</div>
+        <h3>No Google Form Detected</h3>
+        <p>Navigate to any job application Google Form in your browser, then open this extension to auto-fill it.</p>
+        <button class="btn btn-secondary" id="btn-open-dashboard">Open Web Dashboard</button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="popup-footer">
+      <div class="status-indicator">
+        <span class="status-dot online"></span>
+        <span id="ext-server-status">API: Connected</span>
+      </div>
+      <a href="#" id="link-dashboard">Web Dashboard &rarr;</a>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
