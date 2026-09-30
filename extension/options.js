@@ -2,7 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
   const config = await chrome.storage.sync.get({
-    serverUrl: "http://localhost:8000"
+    serverUrl: "https://job-form-filler.onrender.com"
   });
   document.getElementById("server-url").value = config.serverUrl;
 

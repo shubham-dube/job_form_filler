@@ -5,7 +5,7 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.sync.get(["serverUrl"], (result) => {
     if (!result.serverUrl) {
       chrome.storage.sync.set({
-        serverUrl: "http://localhost:8000"
+        serverUrl: "https://job-form-filler.onrender.com"
       });
     }
   });

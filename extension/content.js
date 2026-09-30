@@ -113,7 +113,7 @@
     const url = window.location.href;
 
     // Get server URL from chrome storage (default http://localhost:8000)
-    chrome.storage.sync.get({ serverUrl: "http://localhost:8000" }, async (items) => {
+    chrome.storage.sync.get({ serverUrl: "https://job-form-filler.onrender.com" }, async (items) => {
       const serverUrl = items.serverUrl.replace(/\/+$/, "");
 
       try {

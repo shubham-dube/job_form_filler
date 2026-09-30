@@ -3,12 +3,12 @@
 let currentFormData = null;
 let currentPrefilledUrl = null;
 let activeTabId = null;
-let serverUrl = "http://localhost:8000";
+let serverUrl = "https://job-form-filler.onrender.com";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Load settings
   const config = await chrome.storage.sync.get({
-    serverUrl: "http://localhost:8000"
+    serverUrl: "https://job-form-filler.onrender.com"
   });
   serverUrl = config.serverUrl.replace(/\/+$/, "");
 

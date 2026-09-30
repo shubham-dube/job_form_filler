@@ -27,6 +27,7 @@
     "*://docs.google.com/forms/*",
     "*://forms.gle/*",
     "http://localhost:8000/*",
+    "https://job-form-filler.onrender.com/*",
     "http://127.0.0.1:8000/*",
     "https://*/*"
   ],
