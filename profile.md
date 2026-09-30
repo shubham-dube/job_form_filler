@@ -1,3 +1,10 @@
+# Important things to follow
+
+Write percentage number only where asked
+write lpa in lacks only like. 5 only. 
+write my friend as an alternate mobile number.
+
+
 # SHUBHAM DUBEY
 
 Master Career Profile Document · Version 2.2 · September 2026
